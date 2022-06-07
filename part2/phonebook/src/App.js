@@ -12,6 +12,9 @@ const App = () => {
   // newName state is controlling the form input element
   const [newName, setNewName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
+  const [filterValue, setFilterValue] = useState('')
+  const [filteredPersons, setFilteredPersons] = useState([...persons])
+  console.log(filteredPersons)
 
   const addName = (event) => {
     event.preventDefault()
@@ -38,9 +41,22 @@ const App = () => {
     setPhoneNumber(event.target.value)
   }
 
+  const handleFilter = (event) => {
+    // console.log('filterValue:', event.target.value)
+    setFilterValue(event.target.value)
+
+    let newFilteredPersons = persons.filter(person => person.name.toLowerCase().includes(filterValue.toLowerCase()))
+    // console.log('newFilteredPersons:', newFilteredPersons)
+    setFilteredPersons(newFilteredPersons ? newFilteredPersons : [])
+    // console.log(filteredPersons)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown with <input value={filterValue} onChange={handleFilter} />
+      </div>
       <h3>add a new</h3>
       <PersonForm 
         persons={persons}
@@ -52,7 +68,7 @@ const App = () => {
       />
       <div>debug: {newName}</div>
       <h3>Numbers</h3>
-      <Persons persons={persons} />
+      <Persons persons={filteredPersons} />
     </div>
   )
 }
