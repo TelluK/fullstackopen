@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 // personService (uses axios) handles communication with backend
 import personService from './services/persons'
 
@@ -11,9 +12,28 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [filterValue, setFilterValue] = useState('')
+  const [okMessage, setOkMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  const okMessageStyle = {
+    color: 'green',
+    background: 'lightgrey',
+    fontStyle: 'bold',
+    fontSize: 20,
+    borderStyle: 'solid',
+    padding: 10
+  }
+
+  const errorMessageStyle = {
+    color: 'red',
+    background: 'lightgrey',
+    fontStyle: 'bold',
+    fontSize: 20,
+    borderStyle: 'solid',
+    padding: 10
+  }
 
   useEffect(() => {
-    console.log('effect')
     personService
       .getAll()
       .then(initialData => {
@@ -43,9 +63,13 @@ const App = () => {
               setPersons( persons.map(person => person.id !== changedPerson.id ? person : res.data))
               setNewName('')
               setPhoneNumber('')
+              showSuccessMessage(`Replaced number for ${res.data.name}`)
             }
           })
-          .catch(error => console.log('error', error))
+          .catch(error => {
+            console.log('error', error)
+            showErrorMessage(`Information of ${changedPerson.name} has already been removed from server`)
+          })
       }
     } else {
       console.log('add new person with name', newName)
@@ -55,12 +79,27 @@ const App = () => {
         .then(personData => {
           console.log('data', personData)
           setPersons(persons.concat(personData))
+          showSuccessMessage(`Added ${personData.name}`)
         })
         .catch(error => console.log('error', error))
 
-    setNewName('')
-    setPhoneNumber('')
+      setNewName('')
+      setPhoneNumber('')
     }
+  }
+
+  const showErrorMessage = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000);
+  }
+
+  const showSuccessMessage = (message) => {
+    setOkMessage(message)
+    setTimeout(() => {
+      setOkMessage(null)
+    }, 5000);
   }
 
   const handleNameChange = (event) => {
@@ -83,11 +122,13 @@ const App = () => {
       personService
         .deletePerson(id)
         .then(res => {
-          if (res.status === 200) setPersons(persons.filter(person => person.id !== id))
+          if (res.status === 200) {
+            showSuccessMessage(`Deleted ${person.name}`)
+            setPersons(persons.filter(person => person.id !== id))
+          }
         })
         .catch(error => {
-          console.log('error', error)
-          alert(`Error in deleting person with id ${id}`)
+          showErrorMessage(`Error in deleting person ${person.name}`)
         })
     }
   }
@@ -95,6 +136,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={okMessage} style={okMessageStyle} />
+      <Notification message={errorMessage} style={errorMessageStyle} />
       <Filter filterValue={filterValue} handleFilter={handleFilter} />
       <h3>add a new</h3>
       <PersonForm 
