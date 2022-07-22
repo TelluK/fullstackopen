@@ -37,7 +37,7 @@ const App = () => {
     personService
       .getAll()
       .then(initialData => {
-        console.log('initialData', initialData)
+        // console.log('initialData', initialData)
         setPersons(initialData)
       })
   }, [])
@@ -52,13 +52,13 @@ const App = () => {
     if (persons.filter(person => person.name === newName).length > 0) {
       const person = persons.find(p => p.name === newName)
       const changedPerson = {...person, number: phoneNumber}
-      console.log('changed person:', changedPerson)
+      // console.log('changed person:', changedPerson)
 
       if (window.confirm(`${newName} is already added to phonebook, replace old number with a new one?`)) {
         personService
           .update(changedPerson.id, changedPerson)
           .then(res => {
-            console.log('res', res)
+            // console.log('res', res)
             if (res.status === 200) {
               setPersons( persons.map(person => person.id !== changedPerson.id ? person : res.data))
               setNewName('')
@@ -77,7 +77,7 @@ const App = () => {
       personService
         .create(newPerson)
         .then(personData => {
-          console.log('data', personData)
+          // console.log('data', personData)
           setPersons(persons.concat(personData))
           showSuccessMessage(`Added ${personData.name}`)
         })
@@ -115,14 +115,16 @@ const App = () => {
   }
 
   const handleDelete = (id) => {
-    console.log('IN APP COMPONENT, handleDelete, person id:', id)
+    // console.log('IN APP COMPONENT, handleDelete, person id:', id)
     const person = persons.find(p => p.id === id)
-    console.log('person to delete', person)
+    // console.log('person to delete', person)
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService
         .deletePerson(id)
         .then(res => {
-          if (res.status === 200) {
+          // console.log('status:', res.status)
+          if (res.status === 204) {
+            // status 204 = No Content 
             showSuccessMessage(`Deleted ${person.name}`)
             setPersons(persons.filter(person => person.id !== id))
           }
