@@ -81,7 +81,11 @@ const App = () => {
           setPersons(persons.concat(personData))
           showSuccessMessage(`Added ${personData.name}`)
         })
-        .catch(error => console.log('error', error))
+        .catch(error => {
+          console.log('error', error)
+          console.log(error.response.data)
+          showErrorMessage(`Error: ${error.response.data.error}`)
+        })
 
       setNewName('')
       setPhoneNumber('')
@@ -134,6 +138,7 @@ const App = () => {
         })
     }
   }
+  // <div>debug: {newName}</div>
 
   return (
     <div>
@@ -150,7 +155,6 @@ const App = () => {
         handleNameChange={handleNameChange}
         addName={addName}
       />
-      <div>debug: {newName}</div>
       <h3>Numbers</h3>
       <Persons persons={persons} filterValue={filterValue} handleDelete={handleDelete} />
     </div>
