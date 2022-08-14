@@ -1,5 +1,10 @@
 const config = require('./utils/config')
 const express = require('express')
+/* 
+With express-async-errors -library we can eliminate the try-catch blocks completely in router.
+If an exception occurs in an async route, the execution is automatically passed to the error handling middleware.
+*/
+require('express-async-errors')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
@@ -21,5 +26,6 @@ app.use(cors())
 app.use(express.json())
 app.use('/api/blogs', blogRouter)
 app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 module.exports = app
