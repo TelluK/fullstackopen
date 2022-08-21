@@ -151,6 +151,41 @@ test('if title and url property are missing, respond should be 400 bad request',
   expect(response.body).toHaveLength(initialBlogs.length)
 })
 
+describe('delete blog post', () => {
+  test('if id is valid, status code 204', async () => {
+    const res = await api.get('/api/blogs')
+    const blogsAtStart = res.body
+  
+    await api
+      .delete(`/api/blogs/${blogsAtStart[0].id}`)
+      .expect(204)
+  
+    // check the state in database
+    const response = await api.get('/api/blogs')
+    // console.log(response.body)
+    expect(response.body).toHaveLength(initialBlogs.length -1)
+  })
+})
+
+describe('update blog post', () => {
+  test('update likes amount to be 42', async () => {
+    const res = await api.get('/api/blogs')
+    const blogsAtStart = res.body
+
+    const blog = {
+      title: blogsAtStart[0].title,
+      author: blogsAtStart[0].author,
+      url: blogsAtStart[0].url,
+      likes: 42
+    }
+    // console.log('blog:', blog)
+
+    const update = await api.put(`/api/blogs/${blogsAtStart[0].id}`).send(blog)
+    expect(update.body.likes).toBe(blog.likes)
+  })
+})
+
+
 afterAll(() => {
   mongoose.connection.close()
 })
