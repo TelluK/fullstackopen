@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer <setTokenValueHere>
 
 {
-  "title": "TEST BLOG",
+  "title": "New blog with token",
   "author": "Tester",
   "url": "www",
-  "likes": 42
+  "likes": 55
 }
