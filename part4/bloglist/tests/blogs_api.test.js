@@ -4,6 +4,9 @@ const app = require('../app')
 const Blog = require('../models/blog')
 const api = supertest(app)
 
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
+
 const initialBlogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -182,6 +185,98 @@ describe('update blog post', () => {
 
     const update = await api.put(`/api/blogs/${blogsAtStart[0].id}`).send(blog)
     expect(update.body.likes).toBe(blog.likes)
+  })
+})
+
+describe('users in database', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('secret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test.only('can add new user', async () => {
+    const usersAtStart = await api.get('/api/users')
+    // console.log(usersAtStart.body)
+
+    const newUser = {
+      username: 'testUser',
+      name: 'Tester',
+      password: 'testerPassword',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await api.get('/api/users')
+    // console.log(usersAtEnd.body)
+    expect(usersAtEnd.body).toHaveLength(usersAtStart.body.length + 1)
+  })
+
+  test(`can't add new user with username that allready exists in db`, async () => {
+    const usersAtStart = await api.get('/api/users')
+    // console.log(usersAtStart.body)
+
+    const newUser = {
+      username: 'root',
+      name: 'root user',
+      password: 'rootUsersPassword',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+      console.log(result.body.error)
+      expect(result.body.error).toContain('username allready taken')
+  })
+
+  test(`can't add new user with too short username`, async () => {
+    const usersAtStart = await api.get('/api/users')
+    // console.log(usersAtStart.body)
+
+    const newUser = {
+      username: 'no',
+      name: 'short username',
+      password: 'Password',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+      console.log(result.body.error)
+      expect(result.body.error).toContain('username too short, min length is 3 char')
+  })
+
+  test(`can't add new user with too short password`, async () => {
+    const usersAtStart = await api.get('/api/users')
+    // console.log(usersAtStart.body)
+
+    const newUser = {
+      username: 'username',
+      name: 'short password',
+      password: 'no',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+      console.log(result.body.error)
+      expect(result.body.error).toContain('password too short, min length is 3 char')
   })
 })
 
