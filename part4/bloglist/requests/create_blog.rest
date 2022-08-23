@@ -8,3 +8,8 @@ Authorization: bearer <setTokenValueHere>
   "url": "www",
   "likes": 55
 }
+
+###
+DELETE http://localhost:3003/api/blogs/6304ad3f2bd9d0e334f8a3f9
+Content-Type: application/json
+Authorization: bearer <setTokenValueHere>

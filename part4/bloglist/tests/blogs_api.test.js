@@ -198,7 +198,7 @@ describe('users in database', () => {
     await user.save()
   })
 
-  test.only('can add new user', async () => {
+  test('can add new user', async () => {
     const usersAtStart = await api.get('/api/users')
     // console.log(usersAtStart.body)
 
