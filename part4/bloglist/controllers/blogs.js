@@ -7,13 +7,6 @@ With express-async-errors -library used in app.js we can eliminate the try-catch
 If an exception occurs in an async route, the execution is automatically passed to the error handling middleware we use in app.js.
 */
 
-// const getTokenFrom = request => {
-//   const authorization = request.get('authorization')
-//   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-//     return authorization.substring(7)
-//   }
-//   return null
-// }
 
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -22,19 +15,8 @@ blogRouter.get('/', async (request, response) => {
 
 blogRouter.post('/', async (request, response) => {
   const body = request.body
-
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  // console.log("---------blogRouter.post-----decodedToken:", decodedToken)
-
-  // if token is verified to be valid:
-  // decodedToken object contains the username and id fields, now server knows who made the request
-
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
-  }
-
-  const user = await User.findById(decodedToken.id)
-  // console.log(user)
+  // get token user from request object; middleware userExtractor in use
+  const user = request.user
 
   const blog = new Blog({
     title: body.title,
@@ -52,20 +34,14 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  // console.log("---------blogRouter.delete-----decodedToken:", decodedToken)
-
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
-  }
-  // console.log('blogs id: ', request.params.id)
+  // get token user from request object; middleware userExtractor in use
+  const user = request.user
 
   const blog = await Blog.findById(request.params.id) 
   // console.log('Blog to be removed', blog)
   // console.log('user who added the blog ', blog.user.toString())
 
-  if (blog && blog.user.toString() === decodedToken.id) {
-    // console.log('comparing works')
+  if (blog && blog.user.toString() === user._id.toString()) {
     await Blog.findByIdAndDelete(request.params.id)
     return response.status(204).end()
   }
