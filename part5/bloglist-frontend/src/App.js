@@ -26,7 +26,7 @@ const App = () => {
   useEffect(() => {
     // console.log('useEffect, blogService.getAll()')
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
     )  
   }, [user])
 
@@ -72,14 +72,33 @@ const App = () => {
       showMessage(`new blog ${returnedBlog.title} by ${returnedBlog.author} added`, 'info')
       blogFormRef.current.toggleVisibility()
     } catch (error) {
-      // console.log('catch (error)', error)
-      // console.log('ERROR:', error.response.data.error)
+      showMessage(error.response.data.error, 'error')
+    }
+  }
+
+  const updateLikes = async (updatedBlog) => {
+    // console.log('updateLikes, updatedBlog', updatedBlog)
+    try {
+      const returnedBlog = await blogService.update(updatedBlog)
+      // console.log('updateLikes, response', returnedBlog)
+      setBlogs(blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog))
+      showMessage(`blog ${returnedBlog.title} updated`, 'info')
+    } catch (error) {
+      showMessage(error.response.data.error, 'error')
+    }
+  }
+
+  const removeBlog = async (id) => {
+    try {
+      await blogService.remove(id)
+      showMessage(`Removed blog`, 'info')
+      setBlogs(blogs.filter(blog => blog.id !== id))
+    } catch (error) {
       showMessage(error.response.data.error, 'error')
     }
   }
 
   const showMessage = (message, type) => {
-    console.log('showMessage')
     setMessage(message)
     setNotificationType(type)
     setTimeout(() => {
@@ -115,7 +134,13 @@ const App = () => {
           </Togglable>
           <br></br>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog 
+              key={blog.id} 
+              blog={blog} 
+              updateLikes={updateLikes}
+              removeBlog={removeBlog}
+              tokenUser={user}
+            />
           )}
         </div>
       }
