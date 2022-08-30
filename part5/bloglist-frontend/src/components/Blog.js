@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
-const Blog = ({blog, updateLikes, removeBlog, tokenUser}) => {
+const Blog = ({ blog, updateLikes, removeBlog, tokenUser }) => {
   const [visible, setVisible] = useState(false)
   const [buttonLabel, setButtonLabel] = useState('view')
 
@@ -13,7 +14,7 @@ const Blog = ({blog, updateLikes, removeBlog, tokenUser}) => {
 
   const handleUpdate = () => {
     // console.log('handleUpdate; blog details before update:', blog)
-    const updatedBlog = { ...blog, likes : blog.likes +1}
+    const updatedBlog = { ...blog, likes : blog.likes +1 }
     updateLikes(updatedBlog)
   }
 
@@ -35,18 +36,25 @@ const Blog = ({blog, updateLikes, removeBlog, tokenUser}) => {
       </div>
       <div style={showWhenVisible}>
         {blog.url}
-        <div> likes: 
+        <div> likes:
           {blog.likes}
           <button onClick={handleUpdate}>like</button>
         </div>
         <div>{blog.user.name}</div>
-        {tokenUser.username === blog.user.username ? 
+        {tokenUser.username === blog.user.username ?
           <button onClick={handleRemove}>remove</button>
           : <></>
         }
       </div>
     </>
-    )
+  )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  updateLikes: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  tokenUser: PropTypes.object.isRequired,
 }
 
 export default Blog

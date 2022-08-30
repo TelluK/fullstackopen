@@ -27,7 +27,7 @@ const App = () => {
     // console.log('useEffect, blogService.getAll()')
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
-    )  
+    )
   }, [user])
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-   }, [])
+  }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -58,7 +58,7 @@ const App = () => {
     }
   }
 
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     window.localStorage.removeItem(BLOG_USER_IN_STORAGE)
     setUser(null)
   }
@@ -91,7 +91,7 @@ const App = () => {
   const removeBlog = async (id) => {
     try {
       await blogService.remove(id)
-      showMessage(`Removed blog`, 'info')
+      showMessage('Removed blog', 'info')
       setBlogs(blogs.filter(blog => blog.id !== id))
     } catch (error) {
       showMessage(error.response.data.error, 'error')
@@ -104,14 +104,14 @@ const App = () => {
     setTimeout(() => {
       setMessage(null)
       setNotificationType(null)
-    }, 3000);
+    }, 3000)
   }
 
   return (
     <div>
       <h2>Blogs</h2>
       <Notification message={message} type={notificationType} />
-      {user === null ? 
+      {user === null ?
         <Togglable buttonLabel='login'>
           <LoginForm
             username={username}
@@ -121,10 +121,10 @@ const App = () => {
             handleSubmit={handleLogin}
           />
         </Togglable>
-      : 
+        :
         <div>
           <p>
-            {user.name} logged in 
+            {user.name} logged in
             <button onClick={ () => handleLogout() }>Log out</button>
           </p>
           <Togglable buttonLabel="create new blog" ref={blogFormRef}>
@@ -134,9 +134,9 @@ const App = () => {
           </Togglable>
           <br></br>
           {blogs.map(blog =>
-            <Blog 
-              key={blog.id} 
-              blog={blog} 
+            <Blog
+              key={blog.id}
+              blog={blog}
               updateLikes={updateLikes}
               removeBlog={removeBlog}
               tokenUser={user}
