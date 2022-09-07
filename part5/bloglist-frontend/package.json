@@ -16,7 +16,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "eslint": "eslint .",
-    "fix": "eslint --fix ."
+    "fix": "eslint --fix .",
+    "cypress:open": "cypress open",
+    "test:e2e": "cypress run"
   },
   "eslintConfig": {
     "extends": [
@@ -41,6 +43,8 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.4.3",
+    "cypress": "^10.7.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-jest": "^25.7.0",
     "jest-watch-typeahead": "^0.6.5"
   }

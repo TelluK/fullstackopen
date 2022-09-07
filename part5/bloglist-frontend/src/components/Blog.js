@@ -29,20 +29,20 @@ const Blog = ({ blog, updateLikes, removeBlog, tokenUser }) => {
 
   return (
     <>
-      <div>
+      <div className='blog-div1'>
         <br></br>
         {blog.title} {blog.author}
-        <button onClick={changeVisibility}>{buttonLabel}</button>
+        <button className='view-button' onClick={changeVisibility}>{buttonLabel}</button>
       </div>
-      <div style={showWhenVisible}>
+      <div className='blog-div2' style={showWhenVisible}>
         {blog.url}
         <div> likes:
           {blog.likes}
-          <button onClick={handleUpdate}>like</button>
+          <button className='like-button' onClick={handleUpdate}>like</button>
         </div>
         <div>{blog.user.name}</div>
         {tokenUser.username === blog.user.username ?
-          <button onClick={handleRemove}>remove</button>
+          <button className='remove-button' onClick={handleRemove}>remove</button>
           : <></>
         }
       </div>
