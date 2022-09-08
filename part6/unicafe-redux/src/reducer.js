@@ -3,18 +3,18 @@ const initialState = {
   ok: 0,
   bad: 0
 }
-
+// update values immutably: make copies and modify the copies
 const counterReducer = (state = initialState, action) => {
   console.log(action)
   switch (action.type) {
     case 'GOOD':
-      return state
+      return {...state, good: state.good + 1 }
     case 'OK':
-      return state
+      return {...state, ok: state.ok + 1}
     case 'BAD':
-      return state
+      return {...state, bad: state.bad + 1}
     case 'ZERO':
-      return state
+      return initialState
     default: return state
   }
   
