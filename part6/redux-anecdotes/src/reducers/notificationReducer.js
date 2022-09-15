@@ -16,13 +16,20 @@ const notificationSlice = createSlice({
   }
 })
 
+let timeoutId = 0
 // thunk
 export const setNotification = (notification, seconds ) => {
   return async dispatch => {
     dispatch(createNotification(notification))
-    setTimeout(() => {
+    if (timeoutId !== 0 ) {
+      // console.log('clearTimeout, id:', timeoutId)
+      clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
+      timeoutId = 0
       dispatch(removeNotification())
     }, seconds*1000);
+    // console.log('timeoutId:', timeoutId)
   }
 }
 
