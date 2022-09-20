@@ -4,6 +4,8 @@ import {
   Routes, Route, Link,
   useParams, useMatch, useNavigate
 } from "react-router-dom"
+// use custom-hook
+import { useField } from './hooks'
 
 const Menu = () => {
   const padding = {
@@ -67,20 +69,31 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
-
+  const content = useField('content')
+  const author = useField('author')
+  const info = useField('info')
+  const {reset: resetContent, ...inputcontent} = content
+  const {reset: resetAuthor, ...inputauthor} = author
+  const {reset: resetInfo, ...inputInfo} = info
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    // console.log('handleSubmit', content, author, info)
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
   }
+
+  const handleReset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
+  // input fields dont want reset prop
 
   return (
     <div>
@@ -88,21 +101,24 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          {/* <input {...content}/> */}
+          <input {...inputcontent}/>
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          {/* <input {...author} /> */}
+          <input {...inputauthor}/>
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          {/* <input {...info}/> */}
+          <input {...inputInfo}/>
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
       </form>
+      <button onClick={handleReset}>reset</button>
     </div>
   )
-
 }
 
 const App = () => {
