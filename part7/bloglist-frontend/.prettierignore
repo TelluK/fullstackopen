@@ -1,0 +1,12 @@
+# Prettier ignore:
+node_modules
+build
+coverage
+cypress
+public
+
+package-lock.json
+package.json
+README.md
+
+.eslintrc.js
