@@ -1,7 +1,7 @@
 const Notification = ({ message, type }) => {
   if (message === null) return null
 
-  console.log('notification message;', message, ', type:', type )
+  console.log('notification message;', message, ', type:', type)
 
   const style = {
     color: type === 'error' ? 'red' : 'green',
@@ -9,7 +9,7 @@ const Notification = ({ message, type }) => {
     fontStyle: 'bold',
     fontSize: 20,
     borderStyle: 'solid',
-    padding: 10
+    padding: 10,
   }
 
   return (

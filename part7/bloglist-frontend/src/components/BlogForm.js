@@ -12,7 +12,7 @@ const BlogForm = ({ createBlog }) => {
     const newBlog = {
       title: title,
       author: author,
-      url: url
+      url: url,
     }
     createBlog(newBlog)
     setTitle('')
@@ -51,14 +51,16 @@ const BlogForm = ({ createBlog }) => {
             onChange={(event) => setUrl(event.target.value)}
           />
         </div>
-        <button id='submit-button' type='submit'>Create</button>
+        <button id='submit-button' type='submit'>
+          Create
+        </button>
       </form>
     </>
   )
 }
 
 BlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired
+  createBlog: PropTypes.func.isRequired,
 }
 
 export default BlogForm

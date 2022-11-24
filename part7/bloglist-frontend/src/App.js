@@ -25,11 +25,12 @@ const App = () => {
   // hook is executed when app component is rendered for the first time and when user state changes
   useEffect(() => {
     // console.log('useEffect, blogService.getAll()')
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
-    ).catch(error => {
-      console.log('error', error)
-    })
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
+      .catch((error) => {
+        console.log('error', error)
+      })
   }, [user])
 
   useEffect(() => {
@@ -45,8 +46,8 @@ const App = () => {
     event.preventDefault()
     console.log('handle Login')
     try {
-      const user = await loginService.login( { username, password })
-      window.localStorage.setItem( BLOG_USER_IN_STORAGE, JSON.stringify(user))
+      const user = await loginService.login({ username, password })
+      window.localStorage.setItem(BLOG_USER_IN_STORAGE, JSON.stringify(user))
       // console.log('USER:', user)
       blogService.setToken(user.token)
       setUser(user)
@@ -71,7 +72,10 @@ const App = () => {
       const returnedBlog = await blogService.create(newBlogObject)
       // console.log('addBlog, response', returnedBlog)
       setBlogs(blogs.concat(returnedBlog))
-      showMessage(`new blog ${returnedBlog.title} by ${returnedBlog.author} added`, 'info')
+      showMessage(
+        `new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+        'info'
+      )
       blogFormRef.current.toggleVisibility()
     } catch (error) {
       showMessage(error.response.data.error, 'error')
@@ -83,7 +87,9 @@ const App = () => {
     try {
       const returnedBlog = await blogService.update(updatedBlog)
       // console.log('updateLikes, response', returnedBlog)
-      setBlogs(blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog))
+      setBlogs(
+        blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
+      )
       showMessage(`blog ${returnedBlog.title} updated`, 'info')
     } catch (error) {
       showMessage(error.response.data.error, 'error')
@@ -94,7 +100,7 @@ const App = () => {
     try {
       await blogService.remove(id)
       showMessage('Removed blog', 'info')
-      setBlogs(blogs.filter(blog => blog.id !== id))
+      setBlogs(blogs.filter((blog) => blog.id !== id))
     } catch (error) {
       showMessage(error.response.data.error, 'error')
     }
@@ -113,7 +119,7 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <Notification message={message} type={notificationType} />
-      {user === null ?
+      {user === null ? (
         <Togglable buttonLabel='login'>
           <LoginForm
             username={username}
@@ -123,19 +129,17 @@ const App = () => {
             handleSubmit={handleLogin}
           />
         </Togglable>
-        :
+      ) : (
         <div>
           <p>
             {user.name} logged in
-            <button onClick={ () => handleLogout() }>Log out</button>
+            <button onClick={() => handleLogout()}>Log out</button>
           </p>
-          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-            <BlogForm
-              createBlog={addBlog}
-            />
+          <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+            <BlogForm createBlog={addBlog} />
           </Togglable>
           <br></br>
-          {blogs.map(blog =>
+          {blogs.map((blog) => (
             <Blog
               key={blog.id}
               blog={blog}
@@ -143,9 +147,9 @@ const App = () => {
               removeBlog={removeBlog}
               tokenUser={user}
             />
-          )}
+          ))}
         </div>
-      }
+      )}
     </div>
   )
 }

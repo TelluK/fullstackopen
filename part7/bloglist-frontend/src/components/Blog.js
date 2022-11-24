@@ -14,7 +14,7 @@ const Blog = ({ blog, updateLikes, removeBlog, tokenUser }) => {
 
   const handleUpdate = () => {
     // console.log('handleUpdate; blog details before update:', blog)
-    const updatedBlog = { ...blog, likes : blog.likes +1 }
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
     updateLikes(updatedBlog)
   }
 
@@ -32,19 +32,28 @@ const Blog = ({ blog, updateLikes, removeBlog, tokenUser }) => {
       <div className='blog-div1'>
         <br></br>
         {blog.title} {blog.author}
-        <button className='view-button' onClick={changeVisibility}>{buttonLabel}</button>
+        <button className='view-button' onClick={changeVisibility}>
+          {buttonLabel}
+        </button>
       </div>
       <div className='blog-div2' style={showWhenVisible}>
         {blog.url}
-        <div> likes:
+        <div>
+          {' '}
+          likes:
           {blog.likes}
-          <button className='like-button' onClick={handleUpdate}>like</button>
+          <button className='like-button' onClick={handleUpdate}>
+            like
+          </button>
         </div>
         <div>{blog.user.name}</div>
-        {tokenUser.username === blog.user.username ?
-          <button className='remove-button' onClick={handleRemove}>remove</button>
-          : <></>
-        }
+        {tokenUser.username === blog.user.username ? (
+          <button className='remove-button' onClick={handleRemove}>
+            remove
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   )
