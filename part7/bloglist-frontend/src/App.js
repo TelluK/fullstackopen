@@ -7,6 +7,7 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
 import UserDetails from './components/UserDetails'
+import Navbar from './components/Navbar'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -112,6 +113,7 @@ const App = () => {
 
   return (
     <div>
+      <Navbar user={user} handleLogout={handleLogout} />
       <h2>Blog app</h2>
       <Notification />
       {user === null ? (
@@ -126,10 +128,6 @@ const App = () => {
         </Togglable>
       ) : (
         <div>
-          <p>
-            {user.name} logged in
-            <button onClick={() => handleLogout()}>Log out</button>
-          </p>
           <Togglable buttonLabel='create new blog' ref={blogFormRef}>
             <BlogForm createBlog={addBlog} />
           </Togglable>
