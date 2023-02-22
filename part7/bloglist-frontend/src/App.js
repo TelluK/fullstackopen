@@ -1,9 +1,12 @@
+import { Routes, Route } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import Users from './components/Users'
+import UserDetails from './components/UserDetails'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -109,7 +112,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>Blogs</h2>
+      <h2>Blog app</h2>
       <Notification />
       {user === null ? (
         <Togglable buttonLabel='login'>
@@ -131,15 +134,28 @@ const App = () => {
             <BlogForm createBlog={addBlog} />
           </Togglable>
           <br></br>
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              updateLikes={updateLikes}
-              removeBlog={removeBlog}
-              tokenUser={user}
+          <Routes>
+            <Route path='/users' element={<Users />} />
+            <Route path='/users/:id' element={<UserDetails />} />
+            <Route
+              path='/blogs'
+              element={
+                <>
+                  <h2>Blogs</h2>
+                  {blogs.map((blog) => (
+                    <Blog
+                      key={blog.id}
+                      blog={blog}
+                      updateLikes={updateLikes}
+                      removeBlog={removeBlog}
+                      tokenUser={user}
+                    />
+                  ))}
+                </>
+              }
             />
-          ))}
+            <Route />
+          </Routes>
         </div>
       )}
     </div>
