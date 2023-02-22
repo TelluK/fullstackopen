@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
@@ -141,18 +141,25 @@ const App = () => {
                 <>
                   <h2>Blogs</h2>
                   {blogs.map((blog) => (
-                    <Blog
-                      key={blog.id}
-                      blog={blog}
-                      updateLikes={updateLikes}
-                      removeBlog={removeBlog}
-                      tokenUser={user}
-                    />
+                    <p key={blog.id}>
+                      <Link to={`${blog.id}`} state={{ blog: blog }}>
+                        {blog.title}
+                      </Link>
+                    </p>
                   ))}
                 </>
               }
             />
-            <Route />
+            <Route
+              path='/blogs/:id'
+              element={
+                <Blog
+                  updateLikes={updateLikes}
+                  removeBlog={removeBlog}
+                  tokenUser={user}
+                />
+              }
+            />
           </Routes>
         </div>
       )}
