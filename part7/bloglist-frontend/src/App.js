@@ -8,6 +8,8 @@ import Togglable from './components/Togglable'
 import Users from './components/Users'
 import UserDetails from './components/UserDetails'
 import Navbar from './components/Navbar'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -112,9 +114,12 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Container>
       <Navbar user={user} handleLogout={handleLogout} />
-      <h2>Blog app</h2>
+      <Typography variant='h4' align='left'>
+        Blog app
+      </Typography>
+      <br />
       <Notification />
       {user === null ? (
         <Togglable buttonLabel='login'>
@@ -139,7 +144,9 @@ const App = () => {
               path='/blogs'
               element={
                 <>
-                  <h2>Blogs</h2>
+                  <Typography variant='h5' align='left'>
+                    Blogs
+                  </Typography>
                   {blogs.map((blog) => (
                     <p key={blog.id}>
                       <Link to={`${blog.id}`} state={{ blog: blog }}>
@@ -163,7 +170,7 @@ const App = () => {
           </Routes>
         </div>
       )}
-    </div>
+    </Container>
   )
 }
 
